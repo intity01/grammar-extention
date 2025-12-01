@@ -19,7 +19,8 @@
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write \"src/**/*.{ts,tsx,json}\"",
     "promo:setup": "node scripts/generate-promotional-materials.js",
-    "promo:validate": "node scripts/validate-promotional-materials.js"
+    "promo:validate": "node scripts/validate-promotional-materials.js",
+    "package": "node scripts/package-extension.js"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

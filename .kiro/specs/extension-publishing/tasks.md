@@ -11,13 +11,17 @@
   - Capture 5+ screenshots showing Thai, English, Japanese grammar checking
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
 
-- [ ] 2. Write privacy policy and documentation
+- [x] 2. Write privacy policy and documentation
+
+
   - Create PRIVACY.md stating local processing, no data collection
   - Host privacy policy online (GitHub Pages)
   - Write README with build instructions
   - Write release notes
   - Document permission justifications
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 5.1, 5.2, 5.3, 5.4, 5.5_
+
+
 
 - [ ] 3. Write store listing content
   - Write extension name (max 45 chars)
@@ -30,6 +34,8 @@
 - [ ]* 4. Create demo video (optional)
   - Record 30-60 second demo showing all three languages
   - Show inline and clipboard correction modes
+
+
   - Upload to YouTube
   - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
 
