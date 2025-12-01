@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+build/
+*.log
+
+# Rust/Wasm
+wasm/target/
+wasm/pkg/
+wasm/Cargo.lock
+*.wasm
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+
+# Environment
+.env
+.env.local
+
+# Dictionaries (large binary files)
+dictionaries/*.dat
+dictionaries/*.dat.br
+
+# Temporary files
+*.tmp
+*.temp

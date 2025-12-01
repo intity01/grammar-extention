@@ -1,0 +1,6 @@
+# GitHub Pages Configuration
+theme: jekyll-theme-minimal
+title: Grammar Checker Extension
+description: Privacy-focused grammar checking for Thai, English, and Japanese
+show_downloads: true
+google_analytics: # Add your GA tracking ID if needed

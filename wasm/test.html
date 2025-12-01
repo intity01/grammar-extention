@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wasm NLP Kernel Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebAssembly NLP Kernel Test</h1>
+    
+    <div class="test-section">
+        <h2>Module Status</h2>
+        <div id="status">Loading...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Thai Tokenization Test</h2>
+        <button onclick="testThai()">Test Thai</button>
+        <div id="thai-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Japanese Tokenization Test</h2>
+        <button onclick="testJapanese()">Test Japanese</button>
+        <div id="japanese-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>English Tokenization Test</h2>
+        <button onclick="testEnglish()">Test English</button>
+        <div id="english-result"></div>
+    </div>
+    
+    <script type="module">
+        import init, { 
+            DictionaryManager, 
+            getVersion, 
+            logMessage 
+        } from './pkg/grammar_checker_wasm.js';
+        
+        let manager;
+        
+        async function loadModule() {
+            try {
+                await init();
+                logMessage('Wasm module loaded successfully');
+                
+                const version = getVersion();
+                document.getElementById('status').innerHTML = `
+                    <div class="success">
+                        <strong>✓ Module loaded successfully</strong><br>
+                        Version: ${version}
+                    </div>
+                `;
+                
+                // Create dictionary manager
+                manager = new DictionaryManager();
+                window.manager = manager;
+                
+                console.log('Dictionary manager created');
+            } catch (error) {
+                document.getElementById('status').innerHTML = `
+                    <div class="error">
+                        <strong>✗ Failed to load module</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+                console.error('Failed to load Wasm module:', error);
+            }
+        }
+        
+        window.testThai = async function() {
+            const resultDiv = document.getElementById('thai-result');
+            try {
+                // For this test, we'll use the tokenizer without dictionary
+                // In production, you would load the Thai dictionary first
+                resultDiv.innerHTML = '<p>Thai tokenization requires dictionary to be loaded first.</p>';
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">${error.message}</div>`;
+            }
+        };
+        
+        window.testJapanese = async function() {
+            const resultDiv = document.getElementById('japanese-result');
+            try {
+                const text = 'こんにちは世界';
+                const result = manager.tokenizeJapanese(text);
+                
+                resultDiv.innerHTML = `
+                    <p><strong>Input:</strong> ${text}</p>
+                    <p><strong>Tokens:</strong></p>
+                    <pre>${JSON.stringify(result, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">${error.message}</div>`;
+            }
+        };
+        
+        window.testEnglish = async function() {
+            const resultDiv = document.getElementById('english-result');
+            try {
+                const text = 'The quick brown fox jumps.';
+                const result = manager.tokenizeEnglish(text);
+                
+                resultDiv.innerHTML = `
+                    <p><strong>Input:</strong> ${text}</p>
+                    <p><strong>Tokens:</strong></p>
+                    <pre>${JSON.stringify(result, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">${error.message}</div>`;
+            }
+        };
+        
+        // Load module on page load
+        loadModule();
+    </script>
+</body>
+</html>
