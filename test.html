@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Checker Test Page</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 { color: #333; }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus, textarea:focus, [contenteditable]:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+        textarea { min-height: 120px; resize: vertical; }
+        [contenteditable] {
+            min-height: 100px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            background: white;
+        }
+        .hint {
+            font-size: 13px;
+            color: #888;
+            margin-top: 8px;
+        }
+        .test-text {
+            background: #e8f4fd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        h3 { margin-top: 0; color: #4a90e2; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Grammar Checker Test Page</h1>
+    <p>ใช้หน้านี้ทดสอบ Grammar Checker Extension กับภาษาต่างๆ</p>
+
+    <div class="test-section">
+        <h3>📝 Text Input</h3>
+        <label for="text-input">Single line input:</label>
+        <input type="text" id="text-input" placeholder="Type here to test...">
+        <div class="hint">ลองพิมพ์: "a apple" หรือ "their is a problem"</div>
+    </div>
+
+    <div class="test-section">
+        <h3>📄 Textarea - English</h3>
+        <label for="textarea-en">Multi-line text (English):</label>
+        <textarea id="textarea-en" placeholder="Type English text here..."></textarea>
+        <div class="test-text">
+            <strong>ลองก็อปข้อความนี้:</strong><br>
+            "Their is a problem with you're code. I have went to the store yesterday. A apple a day keeps the doctor away."
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>🇹🇭 Textarea - Thai</h3>
+        <label for="textarea-th">Multi-line text (Thai):</label>
+        <textarea id="textarea-th" placeholder="พิมพ์ภาษาไทยที่นี่..."></textarea>
+        <div class="test-text">
+            <strong>ลองก็อปข้อความนี้:</strong><br>
+            "สวัสดีครับ ผมชื่อ นาย ก วันนี้อากาศ ดี มากครับ"
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>🇯🇵 Textarea - Japanese</h3>
+        <label for="textarea-ja">Multi-line text (Japanese):</label>
+        <textarea id="textarea-ja" placeholder="日本語をここに入力..."></textarea>
+        <div class="test-text">
+            <strong>ลองก็อปข้อความนี้:</strong><br>
+            "今日は天気がいいですね。私は学校に行きました。"
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>✏️ Contenteditable</h3>
+        <label>Rich text editor (contenteditable):</label>
+        <div contenteditable="true" id="contenteditable-test">
+            Click here and start typing to test contenteditable support...
+        </div>
+        <div class="hint">ทดสอบการทำงานกับ rich text editors เช่น Gmail, Google Docs</div>
+    </div>
+
+    <div class="test-section">
+        <h3>📧 Email Input</h3>
+        <label for="email-input">Email field:</label>
+        <input type="email" id="email-input" placeholder="test@example.com">
+    </div>
+
+    <div class="test-section">
+        <h3>🔎 Search Input</h3>
+        <label for="search-input">Search field:</label>
+        <input type="search" id="search-input" placeholder="Search something...">
+    </div>
+
+    <div class="test-section">
+        <h3>🔗 URL Input</h3>
+        <label for="url-input">URL field:</label>
+        <input type="url" id="url-input" placeholder="https://example.com">
+    </div>
+
+    <script>
+        // Log when extension interacts with fields
+        document.querySelectorAll('input, textarea, [contenteditable]').forEach(el => {
+            el.addEventListener('input', () => {
+                console.log('Input detected:', el.id || el.tagName, el.value || el.textContent);
+            });
+        });
+    </script>
+</body>
+</html>

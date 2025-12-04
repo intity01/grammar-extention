@@ -1,0 +1,63 @@
+{
+  "manifest_version": 3,
+  "name": "Grammar Checker Extension",
+  "version": "1.0.0",
+  "description": "Real-time grammar checking for Thai, English, and Japanese without AI",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "offscreen",
+    "clipboardWrite",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "src/content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_icon": {
+      "16": "src/icons/icon16.svg",
+      "48": "src/icons/icon48.svg",
+      "128": "src/icons/icon128.svg"
+    }
+  },
+  "icons": {
+    "16": "src/icons/icon16.svg",
+    "48": "src/icons/icon48.svg",
+    "128": "src/icons/icon128.svg"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "src/wasm/*.wasm",
+        "src/dictionaries/*.dat.br",
+        "src/assets/*",
+        "src/chunks/*",
+        "src/rules/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "options_page": "src/options.html"
+}

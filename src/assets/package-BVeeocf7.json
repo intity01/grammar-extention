@@ -1,0 +1,15 @@
+{
+  "name": "grammar-checker-wasm",
+  "type": "module",
+  "collaborators": ["Grammar Checker Team"],
+  "description": "WebAssembly NLP kernel for grammar checking",
+  "version": "1.0.0",
+  "files": [
+    "grammar_checker_wasm_bg.wasm",
+    "grammar_checker_wasm.js",
+    "grammar_checker_wasm.d.ts"
+  ],
+  "main": "grammar_checker_wasm.js",
+  "types": "grammar_checker_wasm.d.ts",
+  "sideEffects": ["./snippets/*"]
+}

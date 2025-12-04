@@ -1,0 +1,11 @@
+# Extension Icons
+
+Place the following icon files in this directory:
+
+- `icon16.png` - 16x16 pixels
+- `icon48.png` - 48x48 pixels
+- `icon128.png` - 128x128 pixels
+
+These icons will be used in the browser toolbar and extension management page.
+
+For now, you can create simple placeholder icons or use any grammar/text-related icons.

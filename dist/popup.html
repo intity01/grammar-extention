@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grammar Checker</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      
+      body {
+        width: 320px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #fff;
+        color: #1a1a1a;
+        font-size: 13px;
+      }
+      
+      /* Header */
+      .header {
+        padding: 16px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      
+      .logo-icon {
+        width: 24px;
+        height: 24px;
+        background: #000;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 12px;
+      }
+      
+      .master-toggle {
+        position: relative;
+        width: 36px;
+        height: 20px;
+      }
+      
+      .master-toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      
+      .master-toggle .slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background: #e5e5e5;
+        border-radius: 20px;
+        transition: 0.2s;
+      }
+      
+      .master-toggle .slider:before {
+        content: "";
+        position: absolute;
+        height: 16px;
+        width: 16px;
+        left: 2px;
+        bottom: 2px;
+        background: #fff;
+        border-radius: 50%;
+        transition: 0.2s;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      }
+      
+      .master-toggle input:checked + .slider {
+        background: #000;
+      }
+      
+      .master-toggle input:checked + .slider:before {
+        transform: translateX(16px);
+      }
+      
+      /* Tabs */
+      .tabs {
+        display: flex;
+        border-bottom: 1px solid #f0f0f0;
+        padding: 0 12px;
+      }
+      
+      .tab {
+        padding: 12px 12px;
+        font-size: 12px;
+        color: #888;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: 0.15s;
+      }
+      
+      .tab:hover {
+        color: #1a1a1a;
+      }
+      
+      .tab.active {
+        color: #1a1a1a;
+        border-bottom-color: #000;
+        font-weight: 500;
+      }
+      
+      /* Content */
+      .content {
+        padding: 16px 20px;
+        max-height: 350px;
+        overflow-y: auto;
+      }
+      
+      .tab-content {
+        display: none;
+      }
+      
+      .tab-content.active {
+        display: block;
+      }
+      
+      /* Settings */
+      .setting-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #f5f5f5;
+      }
+      
+      .setting-row:last-child {
+        border-bottom: none;
+      }
+      
+      .setting-info {
+        flex: 1;
+      }
+      
+      .setting-label {
+        font-size: 13px;
+        color: #1a1a1a;
+      }
+      
+      .setting-desc {
+        font-size: 11px;
+        color: #888;
+        margin-top: 2px;
+      }
+      
+      /* Toggle */
+      .toggle {
+        position: relative;
+        width: 32px;
+        height: 18px;
+      }
+      
+      .toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      
+      .toggle .slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background: #e5e5e5;
+        border-radius: 18px;
+        transition: 0.2s;
+      }
+      
+      .toggle .slider:before {
+        content: "";
+        position: absolute;
+        height: 14px;
+        width: 14px;
+        left: 2px;
+        bottom: 2px;
+        background: #fff;
+        border-radius: 50%;
+        transition: 0.2s;
+      }
+      
+      .toggle input:checked + .slider {
+        background: #000;
+      }
+      
+      .toggle input:checked + .slider:before {
+        transform: translateX(14px);
+      }
+      
+      /* Select */
+      select {
+        padding: 6px 10px;
+        border: 1px solid #e5e5e5;
+        border-radius: 6px;
+        font-size: 12px;
+        background: #fff;
+        cursor: pointer;
+        outline: none;
+      }
+      
+      select:focus {
+        border-color: #000;
+      }
+      
+      /* Input */
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #e5e5e5;
+        border-radius: 6px;
+        font-size: 12px;
+        outline: none;
+        transition: 0.15s;
+      }
+      
+      input:focus {
+        border-color: #000;
+      }
+      
+      /* Stats */
+      .stats-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      
+      .stat-box {
+        flex: 1;
+        text-align: center;
+        padding: 16px 12px;
+        background: #fafafa;
+        border-radius: 8px;
+      }
+      
+      .stat-value {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+      
+      .stat-label {
+        font-size: 10px;
+        color: #888;
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      
+      /* List */
+      .list {
+        border: 1px solid #f0f0f0;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      
+      .list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+        border-bottom: 1px solid #f5f5f5;
+        font-size: 12px;
+      }
+      
+      .list-item:last-child {
+        border-bottom: none;
+      }
+      
+      .list-empty {
+        padding: 24px;
+        text-align: center;
+        color: #888;
+        font-size: 12px;
+      }
+      
+      /* Buttons */
+      .btn {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.15s;
+      }
+      
+      .btn-primary {
+        background: #000;
+        color: #fff;
+      }
+      
+      .btn-primary:hover {
+        background: #333;
+      }
+      
+      .btn-ghost {
+        background: transparent;
+        color: #888;
+      }
+      
+      .btn-ghost:hover {
+        background: #f5f5f5;
+        color: #1a1a1a;
+      }
+      
+      .btn-danger {
+        background: transparent;
+        color: #e53935;
+      }
+      
+      .btn-danger:hover {
+        background: #ffebee;
+      }
+      
+      /* Input Group */
+      .input-group {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      
+      .input-group input {
+        flex: 1;
+      }
+      
+      /* Current Site */
+      .current-site {
+        background: #fafafa;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 16px;
+      }
+      
+      .current-site-label {
+        font-size: 10px;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      
+      .current-site-url {
+        font-size: 12px;
+        color: #1a1a1a;
+        margin: 6px 0 10px;
+        word-break: break-all;
+      }
+      
+      .current-site-actions {
+        display: flex;
+        gap: 8px;
+      }
+      
+      /* Shortcuts */
+      .shortcuts {
+        background: #fafafa;
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 16px;
+      }
+      
+      .shortcuts-title {
+        font-size: 11px;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+      
+      .shortcut-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: #666;
+        padding: 4px 0;
+      }
+      
+      kbd {
+        background: #e5e5e5;
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-size: 10px;
+        font-family: inherit;
+      }
+      
+      /* Footer */
+      .footer {
+        padding: 12px 20px;
+        border-top: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        color: #888;
+      }
+      
+      .footer a {
+        color: #1a1a1a;
+        text-decoration: none;
+      }
+      
+      .footer a:hover {
+        text-decoration: underline;
+      }
+      
+      /* API Section */
+      .api-section {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #f5f5f5;
+      }
+      
+      .api-hint {
+        font-size: 10px;
+        color: #888;
+        margin-top: 6px;
+      }
+      
+      .api-hint a {
+        color: #1a1a1a;
+      }
+
+      /* Scrollbar */
+      .content::-webkit-scrollbar,
+      .list::-webkit-scrollbar {
+        width: 4px;
+      }
+      
+      .content::-webkit-scrollbar-track,
+      .list::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      
+      .content::-webkit-scrollbar-thumb,
+      .list::-webkit-scrollbar-thumb {
+        background: #e0e0e0;
+        border-radius: 4px;
+      }
+
+      /* Section Title */
+      .section-title {
+        font-size: 11px;
+        font-weight: 500;
+        color: #888;
+        margin: 16px 0 8px;
+      }
+
+      .section-title:first-child {
+        margin-top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <div class="logo-icon">G</div>
+        <span>Grammar</span>
+      </div>
+      <label class="master-toggle">
+        <input type="checkbox" id="enabled" checked />
+        <span class="slider"></span>
+      </label>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" data-tab="settings">Settings</div>
+      <div class="tab" data-tab="stats">Stats</div>
+      <div class="tab" data-tab="dictionary">Dictionary</div>
+      <div class="tab" data-tab="sites">Sites</div>
+    </div>
+    
+    <!-- Content -->
+    <div class="content">
+      <!-- Settings Tab -->
+      <div id="settings" class="tab-content active">
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-label">Auto-correct</div>
+            <div class="setting-desc">Fix errors automatically</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="autoCorrect" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-label">Mode</div>
+          </div>
+          <select id="correctionMode">
+            <option value="inline">Inline</option>
+            <option value="clipboard">Clipboard</option>
+          </select>
+        </div>
+        
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-label">Performance</div>
+          </div>
+          <select id="performanceMode">
+            <option value="fast">Fast</option>
+            <option value="balanced">Balanced</option>
+            <option value="accurate">Accurate</option>
+          </select>
+        </div>
+        
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-label">LanguageTool API</div>
+            <div class="setting-desc">Enhanced checking</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="useLanguageTool" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <div class="api-section" id="apiSection" style="display: none;">
+          <input type="password" id="languageToolApiKey" placeholder="API Key" />
+          <div class="api-hint">
+            Get key at <a href="https://languagetool.org/proofreading-api" target="_blank">languagetool.org</a>
+          </div>
+        </div>
+        
+        <div class="shortcuts">
+          <div class="shortcuts-title">Keyboard shortcuts</div>
+          <div class="shortcut-row">
+            <span>Show suggestion</span>
+            <span><kbd>Ctrl</kbd> + <kbd>.</kbd></span>
+          </div>
+          <div class="shortcut-row">
+            <span>Apply fix</span>
+            <span><kbd>Enter</kbd> or <kbd>Tab</kbd></span>
+          </div>
+          <div class="shortcut-row">
+            <span>Navigate</span>
+            <span><kbd>↑</kbd> <kbd>↓</kbd> or <kbd>1-9</kbd></span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Stats Tab -->
+      <div id="stats" class="tab-content">
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="stat-value" id="totalErrors">0</div>
+            <div class="stat-label">Errors</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="totalCorrections">0</div>
+            <div class="stat-label">Fixed</div>
+          </div>
+        </div>
+        
+        <div class="stat-box" style="margin-bottom: 16px;">
+          <div class="stat-value" id="accuracy">100%</div>
+          <div class="stat-label">Fix Rate</div>
+        </div>
+        
+        <div class="section-title">Errors by type</div>
+        <div class="list" id="errorTypesList" style="max-height: 120px; overflow-y: auto;">
+          <div class="list-empty">No data yet</div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 16px;">
+          <button class="btn btn-ghost" id="resetStats">Reset stats</button>
+        </div>
+      </div>
+      
+      <!-- Dictionary Tab -->
+      <div id="dictionary" class="tab-content">
+        <div class="setting-desc" style="margin-bottom: 12px; color: #888;">
+          Words in your dictionary won't be flagged.
+        </div>
+        <div class="input-group">
+          <input type="text" id="newWord" placeholder="Add word..." />
+          <button class="btn btn-primary" id="addWord">Add</button>
+        </div>
+        <div class="list" id="wordList" style="max-height: 180px; overflow-y: auto;">
+          <div class="list-empty">No words added</div>
+        </div>
+      </div>
+      
+      <!-- Sites Tab -->
+      <div id="sites" class="tab-content">
+        <div class="setting-row" style="padding-top: 0;">
+          <div class="setting-info">
+            <div class="setting-label">Check on</div>
+          </div>
+          <select id="siteMode">
+            <option value="all">All sites</option>
+            <option value="whitelist">Allowed only</option>
+            <option value="blacklist">All except blocked</option>
+          </select>
+        </div>
+        
+        <div class="current-site">
+          <div class="current-site-label">Current site</div>
+          <div class="current-site-url" id="currentSiteUrl">—</div>
+          <div class="current-site-actions">
+            <button class="btn btn-primary" id="enableSite">Allow</button>
+            <button class="btn btn-danger" id="disableSite">Block</button>
+          </div>
+        </div>
+        
+        <div class="section-title">Allowed</div>
+        <div class="list" id="enabledSitesList" style="max-height: 80px; overflow-y: auto;">
+          <div class="list-empty">None</div>
+        </div>
+        
+        <div class="section-title">Blocked</div>
+        <div class="list" id="disabledSitesList" style="max-height: 80px; overflow-y: auto;">
+          <div class="list-empty">None</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+      <span>v1.0</span>
+      <a href="options.html" target="_blank">Options</a>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
